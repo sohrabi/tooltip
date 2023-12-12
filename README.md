@@ -58,7 +58,11 @@ how to use:
 ```
 
 ```
-initTooltip();
+const tooltipInstance = initTooltip();
+```
+
+```
+tooltipInstance.destroy();
 ```
 
 check demo here:

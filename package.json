@@ -1,6 +1,6 @@
 {
   "name": "@sohrabi/tooltip",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "simple css-js tooltip",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

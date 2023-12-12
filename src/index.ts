@@ -1,8 +1,7 @@
 const defaultStyles = 'position:fixed;viibility:hidden;padding:5px;z-index:2001;color:#ffffff;background:#000000 !important;border:1px solid #151515 !important;border-radius:4px;text-align:center;min-width:60px;pointer-events:none;';
 const tooltipPositionsOrder = "bottom,top,right,left,bottomleft,bottomright,topleft,topright";
-const tooltipId = "simple-tooltip";
 const defaulOffset = 1;
-
+const tooltipAlreadyInited = "tooltipAlreadyInited"
 const isTooltipWithinViewport = (left: number, top: number, width: number, height: number) => {
   return (
     left >= 0 &&
@@ -12,15 +11,7 @@ const isTooltipWithinViewport = (left: number, top: number, width: number, heigh
   );
 };
 
-const showTooltip = (element: HTMLElement, tooltipContent: string, positions: string[]) => {
-  let tooltip = document.getElementById(tooltipId);
-  if (!tooltip) {
-    tooltip = document.createElement("span");
-    tooltip.setAttribute("style", defaultStyles);
-    tooltip.classList.add("tooltip")
-    tooltip.id = tooltipId;
-    document.body.append(tooltip);
-  }
+const showTooltip = (element: HTMLElement, tooltip: HTMLElement, tooltipContent: string, positions: string[]) => {
   tooltip.innerHTML = tooltipContent;
   const elmRect = element.getBoundingClientRect();
   const elmWidth = elmRect.width;
@@ -32,7 +23,6 @@ const showTooltip = (element: HTMLElement, tooltipContent: string, positions: st
 
   const tooltipWidth = tooltip.offsetWidth;
   const tooltipHeight = tooltip.offsetHeight;
-
 
   for (const position of positions) {
     let top = 0;
@@ -81,22 +71,26 @@ const showTooltip = (element: HTMLElement, tooltipContent: string, positions: st
   }
 };
 
-const handleMouseHover = (element: HTMLElement, tooltipContent: string, positions: string[]) => {
-  showTooltip(element, tooltipContent, positions);
-};
-
-const hideTooltip = () => {
-  const tooltip = document.getElementById(tooltipId);
-  if (tooltip) {
-    tooltip.style.display = "none";
-    tooltip.style.visibility = "hidden";
-  }
+const hideTooltip = (tooltip: HTMLElement) => {
+  if (!tooltip) return;
+  tooltip.style.display = "none";
+  tooltip.style.visibility = "hidden";
 };
 
 export const initTooltip = () => {
-  if (window["tooltipAlreadyInited"]) return;
-  window["tooltipAlreadyInited"] = true;
-  document.addEventListener("mousemove", (e) => {
+  if (window[tooltipAlreadyInited]) return;
+  
+  window[tooltipAlreadyInited] = true;
+
+  const elmEvents = [];
+  const tooltip = document.createElement("span");
+  tooltip.setAttribute("style", defaultStyles);
+  tooltip.style.display = "none";
+  tooltip.style.visibility = "hidden";
+  tooltip.classList.add("tooltip")
+  document.body.append(tooltip);
+
+  const mouseMove = (e: Event) => {
     const elm = e.target as HTMLElement;
     if (elm?.dataset?.tooltip && !elm?.dataset?.tooltipEventAttached) {
       elm.dataset.tooltipEventAttached = "true";
@@ -109,9 +103,33 @@ export const initTooltip = () => {
       positionsSplited.reverse().forEach(p => {
         if (p) positions.unshift(p.trim());
       });
-      handleMouseHover(elm, elm.dataset?.tooltip, positions);
-      elm.addEventListener("mouseenter", () => { handleMouseHover(elm, elm.dataset?.tooltip, positions); });
-      elm.addEventListener("mouseleave", () => { hideTooltip(); });
+      showTooltip(elm, tooltip, elm.dataset?.tooltip, positions);
+      const mouseenter = () => {
+        showTooltip(elm, tooltip, elm.dataset?.tooltip, positions);
+      };
+      const mouseleave = () => {
+        hideTooltip(tooltip);
+      };
+      elmEvents.push({
+        elm,
+        mouseenter,
+        mouseleave
+      });
+      elm.addEventListener("mouseenter", mouseenter);
+      elm.addEventListener("mouseleave", mouseleave);
     }
-  });
+  };
+
+  document.addEventListener("mousemove", mouseMove);
+
+  return {
+    destroy: () => {
+      document.removeEventListener("mousemove", mouseMove);
+      elmEvents.forEach(elmEvent => {
+        elmEvent.elm.removeEventListener("mouseenter", elmEvent.mouseenter);
+        elmEvent.elm.removeEventListener("mouseleave", elmEvent.mouseleave);
+      });
+      window[tooltipAlreadyInited] = undefined;
+    }
+  }
 }

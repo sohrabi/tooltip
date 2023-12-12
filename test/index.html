@@ -8,7 +8,9 @@
 
 <body style="margin: 0 auto;">
     <div class="box">
-        <span class="top-left" data-positions="left" data-tooltip="long text tooltip &lt;br&gt; A new text after a html break line">My tooltip set to show on [left] </span>
+        <span class="top-left" data-positions="left"
+            data-tooltip="long text tooltip &lt;br&gt; A new text after a html break line">My tooltip set to show on
+            [left] </span>
         <span class="top-center" data-positions="top" data-tooltip="test">My tooltip set to show on [top] </span>
         <span class="top-right" data-positions="right" data-tooltip="test">My tooltip set to show on [right]</span>
     </div>
@@ -26,7 +28,17 @@
         </div>
     </div>
     <script>
-        initTooltip();
+        document.addEventListener("DOMContentLoaded", function (event) {
+            if (!window.initTooltip) {
+                alert("tooltip is not")
+                return;
+            }
+            var tooltipInstance=initTooltip();
+            setTimeout(function() {
+                tooltipInstance.destroy();
+                alert("tooltip instance destroyed");
+            }, 20000);
+        });
     </script>
 </body>
 
