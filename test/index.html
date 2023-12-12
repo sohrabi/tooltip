@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="test.css">
+    <script src="../dist/index.js"></script>
+</head>
+
+<body style="margin: 0 auto;">
+    <div class="box">
+        <span class="top-left" data-positions="left" data-tooltip="long text tooltip &lt;br&gt; A new text after a html break line">My tooltip set to show on [left] </span>
+        <span class="top-center" data-positions="top" data-tooltip="test">My tooltip set to show on [top] </span>
+        <span class="top-right" data-positions="right" data-tooltip="test">My tooltip set to show on [right]</span>
+    </div>
+    <div class="box">
+        <div class="center-box">
+            <span class="top-left" data-positions="right" data-tooltip="test">left</span>
+            <span class="top-center" data-positions="bottom" data-tooltip="test">center</span>
+            <span class="top-right" data-positions="left" data-tooltip="test">right</span>
+            <span class="middle-left" data-positions="right" data-tooltip="test">left</span>
+            <span class="middle-center" data-positions="bottom" data-tooltip="test">center</span>
+            <span class="middle-right" data-positions="left" data-tooltip="test">right</span>
+            <span class="bottom-left" data-positions="right" data-tooltip="test">left</span>
+            <span class="bottom-center" data-positions="top" data-tooltip="test">center</span>
+            <span class="bottom-right" data-positions="left" data-tooltip="test">right</span>
+        </div>
+    </div>
+    <script>
+        initTooltip();
+    </script>
+</body>
+
+</html>

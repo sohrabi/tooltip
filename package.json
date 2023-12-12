@@ -1,0 +1,35 @@
+{
+  "name": "@sohrabi/tooltip",
+  "version": "1.0.0",
+  "description": "simple css-js tooltip",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "webpack"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sohrabi/tooltip.git"
+  },
+  "keywords": [
+    "tooltip",
+    "css",
+    "js",
+    "javascript"
+  ],
+  "author": "Eqbal Sohrabi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sohrabi/tooltip/issues"
+  },
+  "homepage": "https://github.com/sohrabi/tooltip#readme",
+  "devDependencies": {
+    "ts-loader": "9.5.0",
+    "typescript": "5.3.3",
+    "webpack": "5.89.0",
+    "webpack-cli": "5.1.4"
+  }
+}
