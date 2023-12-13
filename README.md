@@ -1,3 +1,4 @@
+
 ![GitHub top language](https://img.shields.io/github/languages/top/sohrabi/tooltip?color=blue&logo=Ionic&logoColor=white) ![GitHub stars](https://img.shields.io/github/stars/sohrabi/tooltip?color=success&logo=github) ![GitHub forks](https://img.shields.io/github/forks/sohrabi/tooltip?color=orange&logo=Furry%20Network&logoColor=white) ![GitHub last commit](https://img.shields.io/github/last-commit/sohrabi/tooltip?color=ff69b4&label=update&logo=git&logoColor=white)
 
 
@@ -12,26 +13,36 @@
 
 # tooltip
 
-simple js css tooltip
+simple  css js tooltip
 
-to install:
+#### Note that you can show both simple text or complex html in you'r tooltip. For html tag you should use `HTML entities (character entities)` instead of tags itself, for example
+<pre>text before break line &lt;br/&gt; text after break line</pre>
+you shuld do it like this:
+```
+<span data-tooltip="text before break line &lt;br/&gt; text after break line" data-positions="right,top">hover me to show tooltip</span>
+```
+for html entities visit here:
+<a href="https://www.w3schools.com/html/html_entities.asp" target="_blank">html entities</a>
+
+### install:
+
 ```
 npm i @sohrabi/tooltip
 ```
 
-how to import:
+#### import:
 ```
 import { initTooltip } from "@sohrabi/tooltip";
 ```
 
-how to use:
+### html element data attributes
 
 <table border="1">
     <thead>
-        <tr><th>option</th><th>description</th></tr>
-        <tr><tr><td>tooltip</td><td>Text Or Html to show as tooltip</td></tr>
+        <tr><th>data attribute</th><th>description</th></tr>
     </thead>
     <tbody>
+        <tr><tr><td>tooltip</td><td>Text Or Html to show as tooltip</td></tr>
         <tr>
             <td>positions</td>
             <td>Comma separated list of positions to change the positioning<br />
@@ -52,18 +63,52 @@ how to use:
 
 <hr/>
 
-
+### html element attributes:
 ```
 <span data-tooltip="test tooltip" data-positions="right,top">hover me to show tooltip</span>
 ```
-
+### initial tooltip
 ```
 const tooltipInstance = initTooltip();
 ```
-
+### destroy tooltip
 ```
 tooltipInstance.destroy();
 ```
+<hr/>
 
-check demo here:
+### custom configs:
+<table border="1">
+    <thead>
+        <tr><th>name</th><th>default</th></tr>
+    </thead>
+    <tbody>
+        <tr><tr><td>disableOnMobile</td><td>false</td></tr>
+        <tr><tr><td>color</td><td>#fff</td></tr>
+        <tr><tr><td>backgroundColor</td><td>#000</td></tr>
+        <tr><tr><td>borderRadius</td><td>4px</td></tr>
+    </tbody>
+</table>
+
+<hr/>
+
+### custom config sample
+```
+const tooltipInstance = initTooltip({ 
+    disableOnMobile: true,
+    backgroundColor: "lightyellow",
+    color: "#9e0101"
+    });
+```
+
+### Online Demo
 <a href="https://sohrabi.github.io/tooltip-demo.html">Open demo page</a>
+
+
+## Using in ES5
+
+If you want to use this library in you'r ES5 application, simple refrence the following js file.
+
+```
+<script type="text/javascript" src="https://unpkg.com/@sohrabi/tooltip/dist/index.js"></script>
+```

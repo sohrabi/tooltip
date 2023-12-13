@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="test.css">
     <script src="../dist/index.js"></script>
 </head>
@@ -30,14 +31,19 @@
     <script>
         document.addEventListener("DOMContentLoaded", function (event) {
             if (!window.initTooltip) {
-                alert("tooltip is not")
+                alert("tooltip is not availabe!");
                 return;
             }
-            var tooltipInstance=initTooltip();
-            setTimeout(function() {
+            var tooltipInstance = initTooltip({
+                disableOnMobile: true,
+                backgroundColor: "lightgreen",
+                color: "blue"
+            });
+
+            setTimeout(function () {
                 tooltipInstance.destroy();
-                alert("tooltip instance destroyed");
-            }, 20000);
+                alert("tooltip destroyed");
+            }, 60000);
         });
     </script>
 </body>
