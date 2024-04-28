@@ -1,4 +1,3 @@
-const defaultStyles = 'position:fixed;visibility:hidden;padding:5px;z-index:2001;color:#fff;background:#000;border:1px solid #151515;border-radius:4px;text-align:center;min-width:60px;pointer-events:none;';
 const tooltipPositionsOrder = ['bottom', 'top', 'right', 'left', 'bottomleft', 'bottomright', 'topleft', 'topright'];
 const tooltipAlreadyInited = 'tooltipAlreadyInited';
 const tooltipAttr = 'data-tooltip';
