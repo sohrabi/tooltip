@@ -1,51 +1,41 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@sohrabi/tooltip demo</title>
+    <link rel="stylesheet" href="test.css">
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">@sohrabi/tooltip</p>
+      <h1>Tiny tooltips for any website</h1>
+      <p class="intro">Hover over or focus each button to test automatic positioning.</p>
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <link rel="stylesheet" type="text/css" href="test.css">
-    <script src="../dist/index.js"></script>
-</head>
+      <section class="demo" aria-label="Tooltip position examples">
+        <button data-tooltip="Displayed above the target" data-positions="top">Top</button>
+        <button data-tooltip="Displayed on the right" data-positions="right">Right</button>
+        <button data-tooltip="Displayed below the target" data-positions="bottom">Bottom</button>
+        <button data-tooltip="Displayed on the left" data-positions="left">Left</button>
+        <button
+          data-tooltip="The invalid position is ignored safely"
+          data-positions="unknown, top, bottom"
+        >
+          Automatic fallback
+        </button>
+      </section>
 
-<body style="margin: 0 auto;">
-    <div class="box">
-        <span class="top-left" data-positions="left"
-            data-tooltip="long text tooltip &lt;br&gt; A new text after a html break line">My tooltip set to show on
-            [left] </span>
-        <span class="top-center" data-positions="top" data-tooltip="test">My tooltip set to show on [top] </span>
-        <span class="top-right" data-positions="right" data-tooltip="test">My tooltip set to show on [right]</span>
-    </div>
-    <div class="box">
-        <div class="center-box">
-            <span class="top-left" data-positions="right" data-tooltip="test">left</span>
-            <span class="top-center" data-positions="bottom" data-tooltip="test">center</span>
-            <span class="top-right" data-positions="left" data-tooltip="test">right</span>
-            <span class="middle-left" data-positions="right" data-tooltip="test">left</span>
-            <span class="middle-center" data-positions="bottom" data-tooltip="test">center</span>
-            <span class="middle-right" data-positions="left" data-tooltip="test">right</span>
-            <span class="bottom-left" data-positions="right" data-tooltip="test">left</span>
-            <span class="bottom-center" data-positions="top" data-tooltip="test">center</span>
-            <span class="bottom-right" data-positions="left" data-tooltip="test">right</span>
-        </div>
-    </div>
+      <p class="hint">Press <kbd>Escape</kbd> to close an open tooltip.</p>
+    </main>
+
+    <script src="../dist/tooltip.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function (event) {
-            if (!window.initTooltip) {
-                alert("tooltip is not availabe!");
-                return;
-            }
-            var tooltipInstance = initTooltip({
-                disableOnMobile: true,
-                backgroundColor: "lightgreen",
-                color: "blue"
-            });
-
-            setTimeout(function () {
-                tooltipInstance.destroy();
-                alert("tooltip destroyed");
-            }, 60000);
-        });
+      initTooltip({
+        backgroundColor: '#111827',
+        borderRadius: '6px',
+        maxWidth: '240px',
+        offset: 8
+      });
     </script>
-</body>
-
+  </body>
 </html>

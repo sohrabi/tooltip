@@ -1,114 +1,195 @@
+# @sohrabi/tooltip
 
-![GitHub top language](https://img.shields.io/github/languages/top/sohrabi/tooltip?color=blue&logo=Ionic&logoColor=white) ![GitHub stars](https://img.shields.io/github/stars/sohrabi/tooltip?color=success&logo=github) ![GitHub forks](https://img.shields.io/github/forks/sohrabi/tooltip?color=orange&logo=Furry%20Network&logoColor=white) ![GitHub last commit](https://img.shields.io/github/last-commit/sohrabi/tooltip?color=ff69b4&label=update&logo=git&logoColor=white)
+A tiny, dependency-free and accessible tooltip for JavaScript and TypeScript.
 
+[![npm version](https://img.shields.io/npm/v/%40sohrabi%2Ftooltip)](https://www.npmjs.com/package/@sohrabi/tooltip)
+[![CI](https://github.com/sohrabi/tooltip/actions/workflows/ci.yml/badge.svg)](https://github.com/sohrabi/tooltip/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/%40sohrabi%2Ftooltip)](./LICENSE)
 
-<img alt="npm package minimized gzipped size (select exports)" src="https://img.shields.io/bundlejs/size/%40sohrabi%2Ftooltip"> <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/minzip/%40sohrabi%2Ftooltip">
+## Why use it?
 
-[![npm version](https://badge.fury.io/js/%40sohrabi%2Ftooltip.svg?v=new)](https://www.npmjs.com/package/@sohrabi/tooltip)
-<img src="https://shields.io/badge/build-passing-blue"/>
-<img src="https://shields.io/badge/analyze-passing-blue"/>
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=plastic)](https://raw.githubusercontent.com/sohrabi/tooltip/main/LICENSE)
+- **Tiny:** about 2.2 kB gzip.
+- **Zero dependencies:** no framework or runtime package is required.
+- **Easy to use:** add two attributes to any HTML element.
+- **Flexible:** supports eight positions and automatically avoids viewport overflow.
+- **Accessible:** works with hover and keyboard focus, includes ARIA attributes and closes with <kbd>Escape</kbd>.
+- **Safe by default:** content is rendered as text unless trusted HTML is explicitly enabled.
+- **Ready for any setup:** use it through npm, ESM, CommonJS or a plain `<script>` tag.
 
-<img alt="npm" src="https://img.shields.io/npm/dt/%40sohrabi%2Ftooltip?label=total%20download"> <img alt="npm" src="https://img.shields.io/npm/dw/%40sohrabi%2Ftooltip?label=weekly download">
+## Install
 
-# tooltip
-
-simple  css js tooltip
-
-#### Note that you can show both simple text or complex html in you'r tooltip. For html tag you should use `HTML entities (character entities)` instead of tags itself, for example
-<pre>text before break line &lt;br/&gt; text after break line</pre>
-you shuld do it like this:
-```
-<span data-tooltip="text before break line &lt;br/&gt; text after break line" data-positions="right,top">hover me to show tooltip</span>
-```
-for html entities visit here:
-<a href="https://www.w3schools.com/html/html_entities.asp" target="_blank">html entities</a>
-
-### install:
-
-```
-npm i @sohrabi/tooltip
+```bash
+npm install @sohrabi/tooltip
 ```
 
-#### import:
-```
-import { initTooltip } from "@sohrabi/tooltip";
-```
+## Use with npm
 
-### html element data attributes
+```ts
+import { initTooltip } from '@sohrabi/tooltip';
 
-<table border="1">
-    <thead>
-        <tr><th>data attribute</th><th>description</th></tr>
-    </thead>
-    <tbody>
-        <tr><tr><td>tooltip</td><td>Text Or Html to show as tooltip</td></tr>
-        <tr>
-            <td>positions</td>
-            <td>Comma separated list of positions to change the positioning<br />
-            default priority is as follow:
-            <br />
-            bottom,
-            top,
-            right,
-            left,
-            bottomleft,
-            bottomright,
-            topleft,
-            topright
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<hr/>
-
-### html element attributes:
-```
-<span data-tooltip="test tooltip" data-positions="right,top">hover me to show tooltip</span>
-```
-### initial tooltip
-```
-const tooltipInstance = initTooltip();
-```
-### destroy tooltip
-```
-tooltipInstance.destroy();
-```
-<hr/>
-
-### custom configs:
-<table border="1">
-    <thead>
-        <tr><th>name</th><th>default</th></tr>
-    </thead>
-    <tbody>
-        <tr><tr><td>disableOnMobile</td><td>false</td></tr>
-        <tr><tr><td>color</td><td>#fff</td></tr>
-        <tr><tr><td>backgroundColor</td><td>#000</td></tr>
-        <tr><tr><td>borderRadius</td><td>4px</td></tr>
-    </tbody>
-</table>
-
-<hr/>
-
-### custom config sample
-```
-const tooltipInstance = initTooltip({ 
-    disableOnMobile: true,
-    backgroundColor: "lightyellow",
-    color: "#9e0101"
-    });
+const tooltip = initTooltip();
 ```
 
-### Online Demo
-<a href="https://sohrabi.github.io/tooltip-demo.html">Open demo page</a>
+Add `data-tooltip` to any element:
 
-
-## Using in ES5
-
-If you want to use this library in you'r ES5 application, simple refrence the following js file.
-
+```html
+<button data-tooltip="Saves your changes">Save</button>
 ```
-<script type="text/javascript" src="https://unpkg.com/@sohrabi/tooltip/dist/index.js"></script>
+
+Initialize the library once after the page is ready. The same instance handles existing elements and elements added later.
+Repeated calls return the active instance, so the options from the first call remain in effect until `destroy()` is called.
+
+## Use without npm
+
+Load the browser bundle from a CDN near the end of `<body>`:
+
+```html
+<button data-tooltip="Saves your changes">Save</button>
+
+<script src="https://cdn.jsdelivr.net/npm/@sohrabi/tooltip@2.0.0/dist/tooltip.min.js"></script>
+<script>
+  const tooltip = initTooltip();
+</script>
 ```
+
+The browser bundle exposes both `window.initTooltip` for convenience and `window.SohrabiTooltip.initTooltip` as a namespaced API.
+
+For production websites, pin the CDN URL to an exact version as shown above.
+
+## Choose preferred positions
+
+Use `data-positions` with a comma-separated priority list:
+
+```html
+<button
+  data-tooltip="The first position with enough space is used"
+  data-positions="right, top, bottom"
+>
+  Hover or focus me
+</button>
+```
+
+Available positions:
+
+| Position | Description |
+| --- | --- |
+| `top` | Centered above the element |
+| `right` | Centered on the right |
+| `bottom` | Centered below the element |
+| `left` | Centered on the left |
+| `topleft` | Outside the top-left corner |
+| `topright` | Outside the top-right corner |
+| `bottomleft` | Outside the bottom-left corner |
+| `bottomright` | Outside the bottom-right corner |
+
+If none of the requested positions fits, the tooltip is kept inside the viewport.
+
+## Options
+
+All options are optional:
+
+```ts
+const tooltip = initTooltip({
+  backgroundColor: '#1f2937',
+  borderRadius: '6px',
+  color: '#fff',
+  maxWidth: '280px',
+  offset: 8
+});
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `allowHTML` | `boolean` | `false` | Render trusted tooltip content as HTML |
+| `backgroundColor` | `string` | `#000` | Background color |
+| `borderRadius` | `string` | `4px` | Border radius |
+| `className` | `string` | `''` | Additional CSS class names |
+| `color` | `string` | `#fff` | Text color |
+| `disableOnMobile` | `boolean` | `false` | Disable tooltips on devices without hover support |
+| `maxWidth` | `string` | `320px` | Maximum tooltip width |
+| `offset` | `number` | `6` | Distance from the target in pixels |
+| `viewportPadding` | `number` | `4` | Minimum distance from viewport edges in pixels |
+| `zIndex` | `number` | `2001` | Tooltip stacking order |
+
+Invalid negative or non-finite numeric values fall back to their defaults.
+
+## Custom styles
+
+Every tooltip has the `sohrabi-tooltip` class. Use `className` to add a project-specific class:
+
+```ts
+initTooltip({ className: 'app-tooltip' });
+```
+
+```css
+.app-tooltip {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+  font: 500 14px/1.4 system-ui, sans-serif;
+}
+
+.app-tooltip[data-position='top'] {
+  margin-top: -2px;
+}
+```
+
+Use the JavaScript options for colors, radius, maximum width and z-index because those core values are applied inline.
+
+## Trusted HTML content
+
+HTML is disabled by default to prevent accidental script injection. If all tooltip content is trusted, enable it explicitly:
+
+```ts
+initTooltip({ allowHTML: true });
+```
+
+```html
+<span data-tooltip="&lt;strong&gt;Important&lt;/strong&gt; message">
+  Details
+</span>
+```
+
+Never enable `allowHTML` for content supplied by users or another untrusted source.
+
+## Instance methods
+
+`initTooltip()` returns an instance with three methods:
+
+```ts
+const tooltip = initTooltip();
+
+tooltip.refresh(); // Refresh active content and position.
+tooltip.hide();    // Hide the active tooltip.
+tooltip.destroy(); // Remove the tooltip and all event listeners.
+```
+
+Call `destroy()` when the library is no longer needed. Calling it more than once is safe.
+
+## TypeScript
+
+Type declarations are included in the package:
+
+```ts
+import {
+  initTooltip,
+  type TooltipInstance,
+  type TooltipOptions,
+  type TooltipPosition
+} from '@sohrabi/tooltip';
+```
+
+## Browser support
+
+The browser bundle targets modern browsers with ES2021 and standard DOM APIs. It supports current versions of Chrome, Edge, Firefox and Safari.
+
+## Development
+
+```bash
+npm install
+npm run check
+```
+
+`npm run check` runs strict TypeScript validation, the test suite, the production build and the gzip size limit.
+
+## License
+
+[ISC](./LICENSE)
