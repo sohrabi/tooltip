@@ -59,6 +59,23 @@ const tooltipPositionsOrder: readonly TooltipPosition[] = [
   'topright'
 ];
 
+const tooltipScaleOrigins: Record<TooltipPosition, string> = {
+  bottom: '50% 0',
+  top: '50% 100%',
+  right: '0 50%',
+  left: '100% 50%',
+  bottomleft: '100% 0',
+  bottomright: '0 0',
+  topleft: '100% 100%',
+  topright: '0 100%'
+};
+
+const zoomTransition = 'transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.3s ease-out';
+
+const prefersReducedMotion = (): boolean => {
+  return typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+};
+
 const defaultOptions: ResolvedTooltipOptions = {
   allowHTML: false,
   backgroundColor: '#000',
@@ -209,11 +226,14 @@ const createTooltipElement = (options: ResolvedTooltipOptions): HTMLSpanElement 
     display: 'none',
     left: '0',
     maxWidth: options.maxWidth,
+    opacity: '0',
     padding: '5px 8px',
     pointerEvents: 'none',
     position: 'fixed',
     textAlign: 'center',
     top: '0',
+    transform: 'scale(0)',
+    transition: zoomTransition,
     visibility: 'hidden',
     whiteSpace: 'normal',
     zIndex: String(options.zIndex)
@@ -235,6 +255,7 @@ export const initTooltip = (options: TooltipOptions = {}): TooltipInstance => {
   const activationTypes = new Set<ActivationType>();
   let activeTarget: HTMLElement | null = null;
   let animationFrame: number | null = null;
+  let zoomFrame: number | null = null;
   let destroyed = false;
   let previousAriaDescribedBy: string | null = null;
 
@@ -251,12 +272,19 @@ export const initTooltip = (options: TooltipOptions = {}): TooltipInstance => {
       animationFrame = null;
     }
 
+    if (zoomFrame !== null) {
+      window.cancelAnimationFrame(zoomFrame);
+      zoomFrame = null;
+    }
+
     disconnectTooltipFromTarget();
     activationTypes.clear();
     activeTarget = null;
     previousAriaDescribedBy = null;
     tooltip.style.display = 'none';
     tooltip.style.visibility = 'hidden';
+    tooltip.style.opacity = '0';
+    tooltip.style.transform = 'scale(0)';
     tooltip.setAttribute('aria-hidden', 'true');
   };
 
@@ -314,6 +342,7 @@ export const initTooltip = (options: TooltipOptions = {}): TooltipInstance => {
     );
 
     tooltip.dataset.position = selectedPosition;
+    tooltip.style.transformOrigin = tooltipScaleOrigins[selectedPosition];
     tooltip.style.left = `${coordinates.left}px`;
     tooltip.style.top = `${coordinates.top}px`;
     tooltip.style.visibility = 'visible';
@@ -333,7 +362,8 @@ export const initTooltip = (options: TooltipOptions = {}): TooltipInstance => {
   const show = (target: HTMLElement, activationType: ActivationType): void => {
     if (destroyed || (resolvedOptions.disableOnMobile && isMobileDevice())) return;
 
-    if (activeTarget !== target) {
+    const targetChanged = activeTarget !== target;
+    if (targetChanged) {
       disconnectTooltipFromTarget();
       activationTypes.clear();
       activeTarget = target;
@@ -350,9 +380,43 @@ export const initTooltip = (options: TooltipOptions = {}): TooltipInstance => {
       return;
     }
 
+    const wasHidden = targetChanged || tooltip.style.display !== 'block' || tooltip.style.opacity !== '1';
+    if (zoomFrame !== null) {
+      window.cancelAnimationFrame(zoomFrame);
+      zoomFrame = null;
+    }
+
+    // Measure at full size: transform scale(0) would report a 0x0 rect.
+    tooltip.style.transition = 'none';
+    tooltip.style.transform = 'none';
+    tooltip.style.opacity = '0';
     tooltip.style.display = 'block';
     tooltip.style.visibility = 'hidden';
     updatePosition();
+
+    if (!wasHidden) {
+      tooltip.style.transition = zoomTransition;
+      tooltip.style.opacity = '1';
+      tooltip.style.transform = 'scale(1)';
+      return;
+    }
+
+    if (prefersReducedMotion()) {
+      tooltip.style.transition = zoomTransition;
+      tooltip.style.opacity = '1';
+      tooltip.style.transform = 'scale(1)';
+      return;
+    }
+
+    // Start from a point (Tooltipster "grow") and zoom to full size.
+    tooltip.style.transform = 'scale(0)';
+    void tooltip.offsetWidth;
+    tooltip.style.transition = zoomTransition;
+    zoomFrame = window.requestAnimationFrame(() => {
+      zoomFrame = null;
+      tooltip.style.opacity = '1';
+      tooltip.style.transform = 'scale(1)';
+    });
   };
 
   const deactivate = (activationType: ActivationType): void => {
